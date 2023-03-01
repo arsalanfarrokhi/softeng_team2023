@@ -141,4 +141,7 @@ class homeFrame(Frame):
                 width=127.5384521484375,
                 height=40.875
             )
-
+        def changeUSER(self, user: str, first: str, last: str):
+            self.USERNAME.set(user)
+            self.FIRST.set(first)
+            self.LAST.set(last)

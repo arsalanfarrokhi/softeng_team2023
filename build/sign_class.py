@@ -82,6 +82,14 @@ class signFrame(Frame):
                 fill="#2578A9",
                 font=("Kreon Bold", 20 * -1)
             )
+            canvasSign.create_text(
+                373.0,
+                509.0,
+                anchor="nw",
+                text="Password ",
+                fill="#2578A9",
+                font=("Kreon Bold", 20 * -1)
+            )
             canvasSign.pack()
             
             #========Entry Objects
@@ -151,6 +159,28 @@ class signFrame(Frame):
                 height=36.0
             )
 
+            self.entrySign_7 = entrySign_7 = PhotoImage(
+                file=ASSETS_PATH / Path("entry_4.png"))
+            entrySign_5b = canvasSign.create_image(
+                573.0,
+                517.0,
+                image=entrySign_7
+            )
+            entrySign_8 = Entry(
+                self,
+                bd=0,
+                bg="#D9D9D9",
+                fg="#000716",
+                highlightthickness=0,
+                textvariable=controller.PASSWORD
+            )
+            entrySign_8.place(
+                x=493.0,
+                y=507.0,
+                width=160.0,
+                height=36.0
+            )
+
             #========Button Objects
             self.buttonSign_6 = buttonSign_6 = PhotoImage(
                 file=ASSETS_PATH / Path("button_1.png"))
@@ -159,13 +189,13 @@ class signFrame(Frame):
                 image=buttonSign_6,
                 borderwidth=0,
                 highlightthickness=0,
-                command=lambda: controller.Signup,
+                command=lambda: controller.Signup(),
                 relief="flat"
             )
             buttonSign_6b.pack()
             buttonSign_6b.place(
                 x=509.0,
-                y=519.0,
+                y=570.0,
                 width=127.5384521484375,
                 height=40.875
             )
@@ -180,7 +210,7 @@ class signFrame(Frame):
                 command=lambda: controller.changePage("homeFrame"),
                 relief="flat"
             )
-            buttonReturn_Sign_b.pack()
+            buttonReturn_Sign_b.pack() 
             buttonReturn_Sign_b.place(
                 x=772.0,
                 y=16.0,

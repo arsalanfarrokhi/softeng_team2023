@@ -3,14 +3,18 @@ from tkinter import *
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
 from pathlib import Path
 from PIL import Image, ImageTk
+import config
 
 class optionsFrame(Frame):
         def __init__(self, parent, controller):
             Frame.__init__(self, parent)
- 
+            
             OUTPUT_PATH = Path(__file__).parent
             ASSETS_PATH = OUTPUT_PATH / Path(r"./assets/frame1")
-
+            
+            self.USERNAME = StringVar()  
+            self.FIRST = StringVar()
+            self.LAST = StringVar()
             #===============Canvas Objects
             
             canvasOptions = Canvas(
@@ -50,7 +54,7 @@ class optionsFrame(Frame):
                 534.0,
                 313.0,
                 anchor="nw",
-                text="Hi {User}",
+                text=f"Hi {controller.getUser()}",
                 fill="#000000",
                 font=("Kreon Bold", 20 * -1)
             )
@@ -88,7 +92,7 @@ class optionsFrame(Frame):
             )
             buttonOptions_2b.pack()
             buttonOptions_2b.place(
-                x=509.0,
+                x=433.0,
                 y=424.0,
                 width=127.5384521484375,
                 height=40.875
@@ -111,6 +115,24 @@ class optionsFrame(Frame):
                 height=40.875
             )
 
+            self.buttonOptions_4 = buttonOptions_4 = PhotoImage(
+                 file=ASSETS_PATH / Path("button_3.png"))
+            buttonOptions_4b = Button(
+                self,
+                image=buttonOptions_4,
+                borderwidth=0,
+                highlightthickness=0,
+                command=lambda: controller.changePage(""),
+                relief="flat"
+            )
+            buttonOptions_4b.pack()
+            buttonOptions_4b.place(
+                x=573.0,
+                y=424.0,
+                width=127.5384521484375,
+                height=40.875
+            )
+
             self.buttonReturn_Options = buttonReturn_Options = PhotoImage(
                  file=ASSETS_PATH / Path("return.png"))
             buttonReturn_Options_b = Button(
@@ -129,3 +151,7 @@ class optionsFrame(Frame):
                 width=35.0,
                 height=35.0
             )
+        def changeUSER(self, user, first, last):
+            self.USERNAME.set(user)
+            self.FIRST.set(first)
+            self.LAST.set(last)

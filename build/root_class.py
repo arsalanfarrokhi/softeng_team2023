@@ -1,6 +1,6 @@
 #===================================Library Definitions
 from tkinter import *
-from tkinter import Tk
+from tkinter import Tk, messagebox
 from login_class import homeFrame
 from sign_class import signFrame
 from options_class import optionsFrame
@@ -8,14 +8,15 @@ from skills_class import skillsFrame
 from undone_class import undoneFrame
 from job_class import jobFrame
 from post_class import postFrame
+import config
 import sqlite3
 
 class windows(Tk):
-        def __init__(self, *args, **kwargs):
+        def __init__(self, user = "", first = "", last = "", *args, **kwargs):
             Tk.__init__(self, *args, **kwargs)
 
             #Variables
-            self.USERNAME = StringVar()
+            self.USERNAME = StringVar()  
             self.PASSWORD = StringVar()
             self.FIRST = StringVar()
             self.LAST = StringVar()
@@ -24,7 +25,8 @@ class windows(Tk):
             self.EMPLOYER = StringVar()
             self.LOCATION = StringVar()
             self.SALARY = StringVar()
-    
+            self.USERFRIEND = StringVar()
+
             #Configuring default window
             self.wm_title("InCollege")
             self.geometry("829x654")
@@ -87,8 +89,12 @@ class windows(Tk):
                 cursor.execute("SELECT * FROM `member` WHERE `username` = ? AND `password` = ?", (self.USERNAME.get(), self.PASSWORD.get()))
                 if cursor.fetchone() is not None:
                     self.nextPage(optionsFrame)
+                    #config.username = self.USERNAME.get()
+                    optionsFrame.changeUSER(self, user = self.USERNAME.get(), first = self.FIRST.get(), last = self.LAST.get())
+                    '''
                     (self.USERNAME).set("")
                     (self.PASSWORD).set("")
+                    '''
                     lambda: print("")
                 else:
                     print("Invalid username or password")
@@ -101,20 +107,28 @@ class windows(Tk):
             self.Database()
             cursor.execute("SELECT * FROM member")
             rows = cursor.fetchall()
-            if (len(rows) < 5):
+            if (len(rows) < 10):
+                for row in rows:
+                    username, password, first, last = row
+                    if(username == self.USERNAME.get()):
+                        cursor.close()
+                        conn.close()
+                        messagebox.showerror(title="Error", message="Username already exists")
+                        return
                 if (self.USERNAME.get() == "" or self.FIRST.get() == "" or self.LAST.get() == ""):
-                    print("Please complete the required field!")
+                    messagebox.showwarning(title="Empty Input", message="Please complete the required field!")
                 else:
-                    if (self.isSignupInfoValid(self)):
-                        sql = ''' INSERT INTO member(username, first, last) VALUES (?,?,?) '''
-                        task = (self.USERNAME.get(), self.FIRST.get(), self.LAST.get())
+                    if (self.isSignupInfoValid()):
+                        sql = ''' INSERT INTO member(username, first, last, password) VALUES (?,?,?, ?) '''
+                        task = (self.USERNAME.get(), self.FIRST.get(), self.LAST.get(), self.PASSWORD.get())
                         cursor.execute(sql, task)
                         conn.commit()
+                        messagebox.showinfo(title="Success", message="Account successfully created.")
                         self.nextPage(homeFrame)
                 cursor.close()
                 conn.close()
             else:
-                print("Maximum number of records in database \n")
+                messagebox.showerror(title="Error", message="Maximum number of users.")
                 cursor.close()
                 conn.close()
 
@@ -135,7 +149,11 @@ class windows(Tk):
                 conn.close()
             else:
                 print("Maximum number of records in database \n")
-
+                
+        ''' def addFriend(self):
+            user, friend = self.USERNAME, self.USERFRIEND
+            self.Database()
+        '''
         def isSignupInfoValid(self):
             
             password = self.PASSWORD.get()
@@ -167,6 +185,8 @@ class windows(Tk):
 
             #  return finalBool // Enabled when the SignUp option has a password field added
             return True 
+        def getUser(self):
+            return self.USERNAME.get()
 
 #==============================================Main Method
 if __name__ == '__main__':
